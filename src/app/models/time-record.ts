@@ -4,6 +4,7 @@ export class TimeRecord {
     usedTime?: number;
     comments: string;
     dateRecord?: Date;
+    state: boolean;
 
     constructor() {
         this.id = 0;
@@ -11,5 +12,6 @@ export class TimeRecord {
         this.usedTime = null;
         this.comments = null;
         this.dateRecord = null;
+        this.state = false;
     }
 }

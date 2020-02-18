@@ -23,6 +23,17 @@ export class TimeRecordService {
   }
 
   updateRecord(data: TimeRecord) {
-    return this.client.put<TimeRecord>(`${environment.url}TimeRecord`, data);
+    return this.client.put<any>(`${environment.url}TimeRecord`, data);
+  }
+
+  updateRecordState(idTimeRecord: number) {
+    const objRecord = {
+      id: idTimeRecord
+    };
+    return this.client.patch<any>(`${environment.url}TimeRecord`, objRecord);
+  }
+
+  deleteRecord(id: number) {
+    return this.client.delete<any>(`${environment.url}TimeRecord/${id}`);
   }
 }

@@ -19,9 +19,15 @@
     </div>
     <div class="row d-flex pb-3" style="margin-right: 230px;">
         <div class="ml-auto">
-            <button class="btn btn-success mr-3" [disabled]="!form.valid" (click)="saveForm()">Save</button>
-            <button class="btn btn-dark mr-3" (click)="resetForm()">Cancel</button>
-            <button class="btn btn-warning" (click)="actionForm({ value: 0 })">Hide Form</button>
+            <button title="Save Record" class="btn btn-success mr-3" [disabled]="!form.valid" (click)="saveForm()">
+                <i class="fa fa-floppy-o"></i>
+            </button>
+            <button title="Cancel" class="btn btn-dark mr-3" (click)="resetForm()">
+                <i class="fa fa-file-o"></i>
+            </button>
+            <button title="Hide Form" class="btn btn-warning" (click)="actionForm({ value: 0 })">
+                <i class="fa fa-window-close"></i>
+            </button>
         </div>
     </div>
 </div>

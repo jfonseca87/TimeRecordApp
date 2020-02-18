@@ -5,26 +5,40 @@
             name="initialDate">
         <label for="finalDate" class="mr-3">Final Date</label>
         <input [(ngModel)]="dateFilter.finalDate" type="date" class="form-control mr-3" id="finalDate" name="finalDate">
-        <button class="btn btn-info mr-3" (click)="search()">Search</button>
-        <button class="btn btn-danger" (click)="actionForm(1)">Add Record</button>
+        <button title="Search" class="btn btn-info mr-3" (click)="search()">
+            <i class="fa fa-search"></i>
+        </button>
+        <button title="Add New Record" class="btn btn-danger" (click)="actionForm(1)">
+            <i class="fa fa-calendar-plus-o"></i>
+        </button>
     </div>
 </div>
 <kendo-grid [data]="gridView" [pageSize]="pageSize" [skip]="skip" [pageable]="true" [height]="500"
     (pageChange)="pageChange($event)">
-    <kendo-grid-column field="activityNumber" title="Activity" width="250">
+    <kendo-grid-column field="activityNumber" title="Activity" width="100">
     </kendo-grid-column>
-    <kendo-grid-column field="usedTime" title="Used Time" width="250">
+    <kendo-grid-column field="usedTime" title="Used Time" width="100">
     </kendo-grid-column>
-    <kendo-grid-column field="comments" title="Comments" width="250">
+    <kendo-grid-column field="comments" title="Comments" width="350">
     </kendo-grid-column>
-    <kendo-grid-column field="dateRecord" title="Date" width="250">
+    <kendo-grid-column field="dateRecord" title="Date" width="180">
         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
             {{ dataItem.dateRecord | date:'yyyy-MM-dd' }}
         </ng-template>
     </kendo-grid-column>
+    <kendo-grid-column field="state" title="State" width="80">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <input type="checkbox">
+        </ng-template>
+    </kendo-grid-column>
     <kendo-grid-command-column title="" width="180">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <button class="btn btn-warning" (click)="callUpdateRecord(dataItem)">Edit</button>
+            <button title="Edit Record" class="btn btn-warning mr-2" (click)="callUpdateRecord(dataItem)">
+                <i class="fa fa-pencil-square-o"></i>
+            </button>
+            <button title="Delete Record" class="btn btn-danger" (click)="callUpdateRecord(dataItem)">
+                <i class="fa fa-trash-o"></i>
+            </button>
         </ng-template>
     </kendo-grid-command-column>
 </kendo-grid>
