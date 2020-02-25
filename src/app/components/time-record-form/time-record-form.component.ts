@@ -1,11 +1,17 @@
+// Angular libraries
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormActionService } from 'src/app/services/form-action.service';
-import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { formatDate } from '@angular/common';
+import { Subscription } from 'rxjs';
+
+// Business models
+import { TimeRecord } from 'src/app/models/time-record';
+
+// Business services
+import { FormActionService } from 'src/app/services/form-action.service';
 import { DateProcessService } from 'src/app/services/date-process.service';
 import { TimeRecordService } from 'src/app/services/time-record.service';
-import { TimeRecord } from 'src/app/models/time-record';
-import { formatDate } from '@angular/common';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-time-record-form',
@@ -28,7 +34,8 @@ export class TimeRecordFormComponent implements OnInit, OnDestroy {
   constructor(private formAction: FormActionService,
               private dateProcess: DateProcessService,
               private fb: FormBuilder,
-              private timeRecord: TimeRecordService) { }
+              private timeRecord: TimeRecordService,
+              private message: MessageService) { }
 
   ngOnInit() {
     this.subscription = this.formAction.getActionValue().subscribe(
@@ -80,7 +87,10 @@ export class TimeRecordFormComponent implements OnInit, OnDestroy {
         this.timeRecordObj = data;
         this.initializeForm();
       },
-      error => console.log('Error in getRecordbyId: ' + error)
+      error => {
+        console.log('Error in getRecord: ' + error);
+        this.message.showMessage('error', 'An error has ocurred, please contact to system administrator');
+      }
     );
   }
 
@@ -90,13 +100,25 @@ export class TimeRecordFormComponent implements OnInit, OnDestroy {
 
     if (this.timeRecordObj.id === 0) {
       this.timeRecord.saveRecord(data).subscribe(
-        res => this.formAction.sendRefreshAction(),
-        error => console.log('Error in saveRecord: ' + error)
+        res => {
+          this.formAction.sendRefreshAction();
+          this.message.showMessage('success', 'The record has been saved successfully');
+        },
+        error => {
+          console.log('Error in saveRecord: ' + error);
+          this.message.showMessage('error', 'An error has ocurred, please contact to system administrator');
+        }
       );
     } else {
       this.timeRecord.updateRecord(data).subscribe(
-        res => this.formAction.sendRefreshAction(),
-        error => console.log('Error in updateRecord: ' + error)
+        res => {
+          this.formAction.sendRefreshAction();
+          this.message.showMessage('success', 'The record has been updated successfully');
+        },
+        error => {
+          console.log('Error in updateRecord: ' + error);
+          this.message.showMessage('error', 'An error has ocurred, please contact to system administrator');
+        }
       );
     }
   }

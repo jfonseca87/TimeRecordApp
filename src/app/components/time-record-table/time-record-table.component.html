@@ -28,7 +28,8 @@
     </kendo-grid-column>
     <kendo-grid-column field="state" title="State" width="80">
         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-            <input type="checkbox">
+            <input *ngIf="!dataItem.state" type="checkbox" data-id="{{ dataItem.id }}" (change)="confirmChangeState($event)">
+            <i title="Registered" *ngIf="dataItem.state" class="fa fa-check-circle fa-lg"></i>
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-command-column title="" width="180">
@@ -36,7 +37,7 @@
             <button title="Edit Record" class="btn btn-warning mr-2" (click)="callUpdateRecord(dataItem)">
                 <i class="fa fa-pencil-square-o"></i>
             </button>
-            <button title="Delete Record" class="btn btn-danger" (click)="callUpdateRecord(dataItem)">
+            <button title="Delete Record" class="btn btn-danger" (click)="confirmDelete(dataItem)">
                 <i class="fa fa-trash-o"></i>
             </button>
         </ng-template>
