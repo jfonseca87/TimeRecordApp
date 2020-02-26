@@ -17,7 +17,7 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
   gridData: any;
   subscription: Subscription;
   messageSubscription: Subscription;
-  pageSize = 10;
+  pageSize = 20;
   skip = 0;
   idTimeRecord = 0;
   dateFilter = {
@@ -57,6 +57,7 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.messageSubscription.unsubscribe();
   }
 
   getData() {
