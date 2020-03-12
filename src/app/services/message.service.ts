@@ -44,9 +44,8 @@ export class MessageService {
       cancelButtonColor: '#d33',
       confirmButtonText: yesMessage
     }).then((result) => {
-      if (result.value) {
-        this.confirmAction.next(type);
-      }
+      const response = result.value ? type : 0;
+      this.confirmAction.next(response);
     });
   }
 }

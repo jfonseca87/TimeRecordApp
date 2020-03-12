@@ -16,8 +16,12 @@
 <kendo-grid [data]="gridView" [pageSize]="pageSize" [skip]="skip" [pageable]="true" [height]="500"
     (pageChange)="pageChange($event)">
     <kendo-grid-column field="activityNumber" title="Activity" width="100">
+        <ng-template kendoGridFooterTemplate let-column="column"> Used Time
+        </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="usedTime" title="Used Time" width="100">
+        <ng-template kendoGridFooterTemplate let-column="column">{{ totalUsedTime }}
+        </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="comments" title="Comments" width="350">
     </kendo-grid-column>
@@ -28,7 +32,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="state" title="State" width="80">
         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-            <input *ngIf="!dataItem.state" type="checkbox" data-id="{{ dataItem.id }}" (change)="confirmChangeState($event)">
+            <input #state *ngIf="!dataItem.state" type="checkbox" data-id="{{ dataItem.id }}" (change)="confirmChangeState($event)">
             <i title="Registered" *ngIf="dataItem.state" class="fa fa-check-circle fa-lg"></i>
         </ng-template>
     </kendo-grid-column>

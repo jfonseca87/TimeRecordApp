@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormActionService } from 'src/app/services/form-action.service';
 import { DateProcessService } from 'src/app/services/date-process.service';
 import { TimeRecordService } from 'src/app/services/time-record.service';
 import { Subscription } from 'rxjs';
 import { GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
 import { MessageService } from 'src/app/services/message.service';
+import { aggregateBy } from '@progress/kendo-data-query';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
   gridData: any;
   subscription: Subscription;
   messageSubscription: Subscription;
+  selectedCheck: any;
+  totalUsedTime = 0;
   pageSize = 20;
   skip = 0;
   idTimeRecord = 0;
@@ -28,6 +31,7 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
     delete: 1,
     changeState: 2
   };
+  aggregates: any[] = [{ field: 'usedTime', aggregate: 'sum' }];
 
   constructor(private formAction: FormActionService,
               private dateProcess: DateProcessService,
@@ -39,15 +43,23 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
     this.setDatesAtGrid(actualDate);
 
     this.subscription = this.formAction.getRefreshAction().subscribe(
-      res => this.getData()
+      res => this.getData(),
     );
 
     this.messageSubscription = this.message.getActionConfirm().subscribe(
       res => {
-        if (res === this.codeMessage.delete) {
-          this.deleteRecord();
-        } else {
-          this.changeStateRecord();
+        switch (res) {
+          case this.codeMessage.delete:
+            this.deleteRecord();
+            break;
+          case this.codeMessage.changeState:
+            this.changeStateRecord();
+            break;
+          case 0:
+            this.uncheckChangeStatus();
+            break;
+          default:
+            break;
         }
       }
     );
@@ -75,6 +87,8 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
       data: this.gridData.slice(this.skip, this.skip + this.pageSize),
       total: this.gridData.length
     };
+
+    this.calculateTotalUsedTime();
   }
 
   pageChange(event: PageChangeEvent) {
@@ -129,6 +143,7 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
   }
 
   confirmChangeState(control: any) {
+    this.selectedCheck = control;
     this.idTimeRecord = Number(control.currentTarget.attributes[2].value);
     this.message.showConfirm('You want to change the state of this record', 'Yes', this.codeMessage.changeState);
   }
@@ -146,5 +161,14 @@ export class TimeRecordTableComponent implements OnInit, OnDestroy {
         this.message.showMessage('error', 'An error has ocurred, please contact to system administrator');
       }
     );
+  }
+
+  uncheckChangeStatus() {
+    this.selectedCheck.target.checked = false;
+  }
+
+  calculateTotalUsedTime() {
+    const totalUsedTime = aggregateBy(this.gridData, this.aggregates);
+    this.totalUsedTime = totalUsedTime.usedTime ? totalUsedTime.usedTime.sum : 0;
   }
 }
